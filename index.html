@@ -89,6 +89,33 @@
     font-family: 'Press Start 2P', monospace;
   }
 
+  .bard-btn {
+    padding: 4px 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #a89860;
+    background: linear-gradient(180deg, #3a2a10 0%, #2a1a08 100%);
+    border: 1px solid #8b7340;
+    border-bottom-color: #2a1a08;
+    border-right-color: #2a1a08;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 #000;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .bard-btn:hover {
+    color: #f0d878;
+    background: linear-gradient(180deg, #4a3818 0%, #3a2a10 100%);
+  }
+
+  .bard-btn.playing {
+    color: #78a050;
+    border-color: #78a050;
+    text-shadow: 0 0 4px rgba(120, 160, 80, 0.4);
+  }
+
   .content {
     padding: 16px;
   }
@@ -391,9 +418,11 @@
   <div class="title-bar">
     <h1>~ Will My Dad Like This Moustache? ~</h1>
     <div class="window-buttons">
+      <button class="bard-btn" id="bardBtn" title="Toggle bard music">&#9835; Bard</button>
       <div class="window-btn">_</div>
       <div class="window-btn">x</div>
     </div>
+    <audio id="bardAudio" loop preload="auto" src="media/Minstrel_Dance.mp3"></audio>
   </div>
 
   <div class="content">
@@ -447,6 +476,20 @@ const gameWindow = document.getElementById('gameWindow');
 
 let attempts = 0;
 let hasImage = false;
+
+const bardBtn = document.getElementById('bardBtn');
+const bardAudio = document.getElementById('bardAudio');
+bardBtn.addEventListener('click', () => {
+  if (bardAudio.paused) {
+    bardAudio.play();
+    bardBtn.classList.add('playing');
+    bardBtn.innerHTML = '&#9835; Bard ON';
+  } else {
+    bardAudio.pause();
+    bardBtn.classList.remove('playing');
+    bardBtn.innerHTML = '&#9835; Bard';
+  }
+});
 
 const analysisMsgs = [
   { text: 'Initialising FolicleDetect v3.2...', type: '' },
