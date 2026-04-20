@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will My Dad Like This Moustache?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: #1a1a0e;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 31px,
+        rgba(0,0,0,0.15) 31px,
+        rgba(0,0,0,0.15) 32px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 31px,
+        rgba(0,0,0,0.15) 31px,
+        rgba(0,0,0,0.15) 32px
+      );
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Press Start 2P', monospace;
+    color: #e8d5a3;
+    padding: 16px;
+  }
+
+  .game-window {
+    width: 100%;
+    max-width: 620px;
+    border: 4px solid #5c4a2a;
+    border-top-color: #8b7340;
+    border-left-color: #8b7340;
+    border-right-color: #3a2a10;
+    border-bottom-color: #3a2a10;
+    background: #2a2215;
+    box-shadow:
+      0 0 0 2px #1a1a0e,
+      0 0 0 4px #5c4a2a,
+      0 0 30px rgba(0,0,0,0.8),
+      inset 0 0 60px rgba(0,0,0,0.3);
+  }
+
+  .title-bar {
+    background: linear-gradient(180deg, #5c4a2a 0%, #3a2a10 100%);
+    border-bottom: 2px solid #8b7340;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .title-bar h1 {
+    font-size: 9px;
+    color: #f0d878;
+    text-shadow: 1px 1px 0 #000, 2px 2px 4px rgba(0,0,0,0.6);
+    letter-spacing: 1px;
+    line-height: 1.6;
+  }
+
+  .title-bar .window-buttons {
+    display: flex;
+    gap: 4px;
+  }
+
+  .title-bar .window-btn {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #8b7340;
+    border-radius: 0;
+    background: #3a2a10;
+    color: #f0d878;
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    font-family: 'Press Start 2P', monospace;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .upload-zone {
+    border: 2px dashed #5c4a2a;
+    background: #1e1a10;
+    padding: 30px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .upload-zone:hover {
+    border-color: #f0d878;
+    background: #252010;
+  }
+
+  .upload-zone.has-image {
+    padding: 12px;
+    cursor: default;
+  }
+
+  .upload-zone .sword-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+    display: block;
+    filter: grayscale(0.3);
+  }
+
+  .upload-zone p {
+    font-size: 8px;
+    line-height: 2;
+    color: #a89860;
+  }
+
+  .upload-zone p .highlight {
+    color: #f0d878;
+    text-decoration: underline;
+  }
+
+  .upload-zone input[type="file"] {
+    display: none;
+  }
+
+  .preview-img {
+    max-width: 100%;
+    max-height: 260px;
+    border: 2px solid #5c4a2a;
+    image-rendering: auto;
+    display: block;
+    margin: 0 auto 10px;
+  }
+
+  .analyse-btn {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #f0d878;
+    background: linear-gradient(180deg, #5c4a2a 0%, #3a2a10 100%);
+    border: 2px solid #8b7340;
+    border-bottom-color: #2a1a08;
+    border-right-color: #2a1a08;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 #000;
+    letter-spacing: 1px;
+    transition: all 0.1s;
+  }
+
+  .analyse-btn:hover {
+    background: linear-gradient(180deg, #7a6438 0%, #4a3818 100%);
+    color: #fff5c0;
+  }
+
+  .analyse-btn:active {
+    border-top-color: #2a1a08;
+    border-left-color: #2a1a08;
+    border-bottom-color: #8b7340;
+    border-right-color: #8b7340;
+    transform: translateY(1px);
+  }
+
+  .analyse-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .log-box {
+    margin-top: 14px;
+    background: #0d0d08;
+    border: 2px solid #3a2a10;
+    border-top-color: #1a1208;
+    border-left-color: #1a1208;
+    border-right-color: #5c4a2a;
+    border-bottom-color: #5c4a2a;
+    padding: 12px;
+    max-height: 220px;
+    overflow-y: auto;
+    display: none;
+  }
+
+  .log-box.visible { display: block; }
+
+  .log-line {
+    font-size: 7px;
+    line-height: 2.4;
+    color: #78a050;
+    opacity: 0;
+    animation: logFadeIn 0.3s forwards;
+  }
+
+  .log-line.system { color: #a89860; }
+  .log-line.warning { color: #d4a017; }
+  .log-line.error { color: #c85040; }
+  .log-line.info { color: #5898b8; }
+
+  @keyframes logFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .log-line .timestamp {
+    color: #555540;
+    margin-right: 6px;
+  }
+
+  .progress-bar-container {
+    margin-top: 12px;
+    background: #0d0d08;
+    border: 2px solid #3a2a10;
+    border-top-color: #1a1208;
+    border-left-color: #1a1208;
+    border-right-color: #5c4a2a;
+    border-bottom-color: #5c4a2a;
+    height: 22px;
+    padding: 3px;
+    display: none;
+  }
+
+  .progress-bar-container.visible { display: block; }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(180deg, #78a050 0%, #4a7028 100%);
+    width: 0%;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 6px rgba(120, 160, 80, 0.4);
+  }
+
+  .result-box {
+    margin-top: 14px;
+    display: none;
+  }
+
+  .result-box.visible { display: block; }
+
+  .npc-dialog {
+    background: #1e1a10;
+    border: 3px solid #5c4a2a;
+    border-top-color: #8b7340;
+    border-left-color: #8b7340;
+    border-right-color: #3a2a10;
+    border-bottom-color: #3a2a10;
+    padding: 16px;
+    position: relative;
+  }
+
+  .npc-dialog .npc-name {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 18px;
+    color: #f0d878;
+    text-shadow: 1px 1px 0 #000;
+    margin-bottom: 6px;
+  }
+
+  .npc-dialog .npc-title {
+    font-size: 7px;
+    color: #8b7340;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .npc-dialog .verdict {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 22px;
+    color: #c85040;
+    text-shadow: 1px 1px 0 #000, 0 0 10px rgba(200, 80, 64, 0.3);
+    margin-bottom: 10px;
+  }
+
+  .npc-dialog .message {
+    font-size: 8px;
+    line-height: 2.2;
+    color: #d4c898;
+  }
+
+  .npc-portrait {
+    float: left;
+    width: 64px;
+    height: 64px;
+    background: #0d0d08;
+    border: 2px solid #5c4a2a;
+    margin-right: 14px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    image-rendering: pixelated;
+  }
+
+  .try-again-btn {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: #a89860;
+    background: linear-gradient(180deg, #2a2215 0%, #1e1a10 100%);
+    border: 2px solid #5c4a2a;
+    border-bottom-color: #2a1a08;
+    border-right-color: #2a1a08;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 #000;
+    letter-spacing: 1px;
+    transition: all 0.1s;
+  }
+
+  .try-again-btn:hover {
+    color: #f0d878;
+    background: linear-gradient(180deg, #3a2a10 0%, #2a2215 100%);
+  }
+
+  .footer {
+    border-top: 2px solid #3a2a10;
+    padding: 8px 14px;
+    text-align: center;
+  }
+
+  .footer span {
+    font-size: 6px;
+    color: #3a3520;
+    letter-spacing: 1px;
+  }
+
+  .upload-count {
+    font-size: 7px;
+    color: #5c4a2a;
+    text-align: right;
+    margin-top: 8px;
+  }
+
+  .upload-count span {
+    color: #c85040;
+  }
+
+  .log-box::-webkit-scrollbar { width: 8px; }
+  .log-box::-webkit-scrollbar-track { background: #0d0d08; }
+  .log-box::-webkit-scrollbar-thumb {
+    background: #3a2a10;
+    border: 1px solid #5c4a2a;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-3px) rotate(-0.5deg); }
+    40% { transform: translateX(3px) rotate(0.5deg); }
+    60% { transform: translateX(-2px) rotate(-0.3deg); }
+    80% { transform: translateX(2px) rotate(0.3deg); }
+  }
+
+  .shake { animation: shake 0.5s ease; }
+
+  .pixel-divider {
+    height: 4px;
+    background: repeating-linear-gradient(
+      90deg,
+      #5c4a2a 0px, #5c4a2a 4px,
+      transparent 4px, transparent 8px
+    );
+    margin: 12px 0;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="game-window" id="gameWindow">
+  <div class="title-bar">
+    <h1>~ Will My Dad Like This Moustache? ~</h1>
+    <div class="window-buttons">
+      <div class="window-btn">_</div>
+      <div class="window-btn">x</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="upload-zone" id="uploadZone">
+      <span class="sword-icon">&#9876;</span>
+      <p>Drop thy moustache portrait here<br>or <span class="highlight">click to choose file</span></p>
+      <input type="file" id="fileInput" accept="image/*">
+    </div>
+
+    <button class="analyse-btn" id="analyseBtn" disabled>&#9764; Consult Father &#9764;</button>
+
+    <div class="progress-bar-container" id="progressContainer">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="log-box" id="logBox"></div>
+
+    <div class="result-box" id="resultBox">
+      <div class="npc-dialog">
+        <div class="npc-portrait">&#128104;</div>
+        <div class="npc-name">Dad</div>
+        <div class="npc-title">[Level 99 Moustache Critic]</div>
+        <div class="pixel-divider"></div>
+        <div class="verdict" id="verdictText"></div>
+        <div class="message" id="messageText"></div>
+      </div>
+      <button class="try-again-btn" id="tryAgainBtn">&#8634; He'll like this one, surely...</button>
+    </div>
+
+    <div class="upload-count" id="uploadCount"></div>
+  </div>
+
+  <div class="footer">
+    <span>MoustacheQuest v1.0 &bull; No moustaches were approved in the making of this app &bull; &copy; 2002</span>
+  </div>
+</div>
+
+<script>
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const analyseBtn = document.getElementById('analyseBtn');
+const logBox = document.getElementById('logBox');
+const progressContainer = document.getElementById('progressContainer');
+const progressBar = document.getElementById('progressBar');
+const resultBox = document.getElementById('resultBox');
+const verdictText = document.getElementById('verdictText');
+const messageText = document.getElementById('messageText');
+const tryAgainBtn = document.getElementById('tryAgainBtn');
+const uploadCountEl = document.getElementById('uploadCount');
+const gameWindow = document.getElementById('gameWindow');
+
+let attempts = 0;
+let hasImage = false;
+
+const analysisMsgs = [
+  { text: 'Initialising FolicleDetect v3.2...', type: '' },
+  { text: 'Scanning upper lip region...', type: '' },
+  { text: 'Identifying individual follicles...', type: '' },
+  { text: 'WARNING: Moustache detected in upload area', type: 'warning' },
+  { text: 'Mapping hair density matrix...', type: 'info' },
+  { text: 'Analysing curvature and droop factor...', type: '' },
+  { text: 'Cross-referencing with Dad\'s Approved Styles DB...', type: 'info' },
+  { text: '(Database is empty)', type: 'error' },
+  { text: 'Checking Solo consumption levels...', type: '' },
+  { text: 'Solo cans detected in background: probable', type: 'warning' },
+  { text: 'Measuring handlebar coefficient...', type: '' },
+  { text: 'Computing Embarrassment Index...', type: '' },
+  { text: 'Evaluating "sure it\'s grand" probability...', type: 'info' },
+  { text: 'Running DadApproval.exe...', type: '' },
+  { text: 'ERROR: Approval module returned NULL', type: 'error' },
+  { text: 'Consulting ancient Dad wisdom scrolls...', type: 'system' },
+  { text: 'Scroll says: "Shave it off"', type: 'warning' },
+  { text: 'Attempting bribery subroutine with tea...', type: '' },
+  { text: 'Bribery failed. Dad is resolute.', type: 'error' },
+  { text: 'Compiling final verdict...', type: 'system' },
+  { text: 'Loading lip_furniture_classifier.dll...', type: '' },
+  { text: 'Calibrating whisker-to-face ratio...', type: '' },
+  { text: 'Pinging Dad\'s subconscious...', type: 'info' },
+  { text: 'Connection refused. As expected.', type: 'error' },
+  { text: 'Checking moustache against known war criminals...', type: 'warning' },
+  { text: 'Match confidence: uncomfortable', type: 'error' },
+  { text: 'Engaging FacialHairNeuralNet (2 neurons, both say no)...', type: '' },
+  { text: 'Sampling ambient disappointment levels...', type: '' },
+  { text: 'Levels: critical', type: 'error' },
+  { text: 'Performing symmetry analysis...', type: 'info' },
+  { text: 'Result: asymmetric. Dad noticed immediately.', type: 'warning' },
+  { text: 'Fetching list of moustaches Dad has tolerated...', type: 'info' },
+  { text: 'List loaded. Length: 0', type: 'error' },
+  { text: 'Running upper_lip_coverage.sh...', type: '' },
+  { text: 'Generating 3D moustache wireframe model...', type: 'info' },
+  { text: 'Model rendered. Dad closed the window.', type: 'error' },
+  { text: 'Checking if this counts as a moustache or just stubble...', type: '' },
+  { text: 'Either way, Dad hates it', type: 'warning' },
+  { text: 'Estimating weekly maintenance cost in both time and dignity...', type: '' },
+  { text: 'Querying DadOpinion microservice...', type: 'info' },
+  { text: 'Service returned 403: Permanently Forbidden', type: 'error' },
+  { text: 'Compressing disappointment into final payload...', type: 'system' },
+];
+
+const extraMsgs = [
+  { text: 'Detecting if this is worse than the last one...', type: '' },
+  { text: 'It is.', type: 'error' },
+  { text: 'Querying "Has Anyone\'s Dad Ever Liked A Moustache" API...', type: 'info' },
+  { text: '404: No results found', type: 'error' },
+  { text: 'Checking if moustache violates Geneva Convention...', type: 'warning' },
+  { text: 'Inconclusive. But Dad would say yes.', type: 'system' },
+  { text: 'Simulating Dad\'s disappointed sigh...', type: '' },
+  { text: 'Sigh amplitude: maximum', type: 'error' },
+  { text: 'Measuring resemblance to 1970s detective...', type: 'info' },
+  { text: 'Dad says that\'s not the compliment you think it is', type: 'warning' },
+  { text: 'Comparing to every moustache Dad has rejected...', type: '' },
+  { text: 'That\'s all of them. This one too.', type: 'error' },
+  { text: 'Loading Dad\'s "I\'m not angry, just disappointed" module...', type: 'system' },
+  { text: 'Module loaded successfully. It always loads successfully.', type: 'warning' },
+  { text: 'Checking if growing it longer would help...', type: 'info' },
+  { text: 'Narrator: it would not', type: 'error' },
+  { text: 'Scanning for any redeeming qualities...', type: '' },
+  { text: 'Scan complete. Array empty.', type: 'error' },
+  { text: 'Asking Mam if she can convince Dad...', type: 'info' },
+  { text: 'Mam is staying out of this one', type: 'warning' },
+  { text: 'Polling extended family for second opinions...', type: 'info' },
+  { text: 'Uncle says it\'s "interesting". That means no.', type: 'warning' },
+  { text: 'Running moustache through Interpol database...', type: '' },
+  { text: 'No matches, but they asked you to shave it anyway', type: 'error' },
+  { text: 'Checking if Dad has ever used the word "nice" about facial hair...', type: 'info' },
+  { text: 'grep returned zero results across 58 years of data', type: 'error' },
+  { text: 'Attempting to invoke Dad\'s nostalgia for the 1980s...', type: '' },
+  { text: 'He says the 80s were grand but the moustaches weren\'t', type: 'warning' },
+  { text: 'Measuring cringe factor per square centimetre...', type: '' },
+  { text: 'Cringe density: off the charts', type: 'error' },
+  { text: 'Checking if anyone in your family tree ever had a moustache...', type: 'info' },
+  { text: 'Great-uncle Paddy did. We don\'t talk about uncle Paddy.', type: 'system' },
+  { text: 'Submitting moustache to peer review...', type: '' },
+  { text: 'All peers declined to review', type: 'error' },
+  { text: 'Testing if squinting makes it look better...', type: '' },
+  { text: 'Squinting made it worse', type: 'error' },
+  { text: 'Searching StackOverflow for "how to make dad like moustache"...', type: 'info' },
+  { text: 'Top answer: "You can\'t. Accept it."', type: 'warning' },
+  { text: 'Generating AI-enhanced version of your moustache...', type: '' },
+  { text: 'AI also recommends shaving', type: 'error' },
+  { text: 'Checking if the moustache has its own postcode...', type: '' },
+  { text: 'It doesn\'t. But it is visible from space.', type: 'warning' },
+  { text: 'Running sentiment analysis on Dad\'s facial expression...', type: 'info' },
+  { text: 'Sentiment: maximum disapproval', type: 'error' },
+  { text: 'Checking if a hat would distract from the moustache...', type: '' },
+  { text: 'Dad says he\'d hate the hat too', type: 'warning' },
+  { text: 'Uploading moustache to the cloud for a second opinion...', type: 'info' },
+  { text: 'Cloud rejected the upload', type: 'error' },
+  { text: 'Checking moustache wax futures on the stock market...', type: '' },
+  { text: 'Market crashed when your photo loaded', type: 'error' },
+  { text: 'Feeding your moustache into DALL-E to see what it\'d look like good...', type: 'info' },
+  { text: 'DALL-E returned a clean-shaven face', type: 'error' },
+  { text: 'Asking ChatGPT to write something nice about it...', type: '' },
+  { text: 'ChatGPT says "I\'m unable to generate that content"', type: 'error' },
+  { text: 'Consulting the Magic 8-Ball...', type: 'system' },
+  { text: '"My sources say no"', type: 'error' },
+  { text: 'Simulating alternate timeline where Dad likes moustaches...', type: 'info' },
+  { text: 'Simulation crashed. Paradox detected.', type: 'error' },
+  { text: 'Checking moustache pH levels...', type: '' },
+  { text: 'pH level: acidic, like Dad\'s opinion of it', type: 'warning' },
+  { text: 'Scanning for traces of dignity...', type: '' },
+  { text: 'None detected within the moustache zone', type: 'error' },
+  { text: 'Attempting to bribe the algorithm...', type: 'system' },
+  { text: 'Algorithm has integrity. Unlike the moustache.', type: 'error' },
+  { text: 'Checking if it looks better in black and white...', type: '' },
+  { text: 'No. It just looks sad in black and white.', type: 'warning' },
+  { text: 'Phoning a friend...', type: 'info' },
+  { text: 'Friend hung up after seeing the photo', type: 'error' },
+];
+
+const verdicts = [
+  "ABSOLUTELY NOT.",
+  "NO.",
+  "NOT A CHANCE.",
+  "NEGATIVE.",
+  "DAD SAYS NO.",
+  "REJECTED.",
+  "DENIED.",
+  "PERMISSION DENIED.",
+  "THAT'S A NO FROM DAD.",
+  "VERDICT: SHAVE IT.",
+  "ACCESS DENIED.",
+  "MOUSTACHE REJECTED.",
+  "NAH.",
+  "NOT IN THIS HOUSE.",
+  "TRY AGAIN. ACTUALLY, DON'T.",
+  "HARD NO.",
+  "QUEST FAILED.",
+  "GAME OVER FOR THAT MOUSTACHE.",
+  "DAD HAS SPOKEN.",
+  "CRITICAL MISS.",
+  "YOU HAVE BEEN DEFEATED.",
+  "SHAVE +10 XP.",
+  "APPROVAL RATE: 0/0.",
+  "FATAL ERROR: MOUSTACHE.",
+  "NOT TODAY. NOT EVER.",
+  "THE COUNCIL OF DAD HAS RULED.",
+  "MOUSTACHE.EXE HAS STOPPED WORKING.",
+  "NOPE.",
+  "RESPECTFULLY, NO.",
+  "DISRESPECTFULLY, ALSO NO.",
+];
+
+const messages = [
+  "Of course not. Why do you keep uploading these?",
+  "Your father has asked me to inform you that he has never liked a moustache and he's not about to start now.",
+  "Dad used his one phone call to tell you to shave that off.",
+  "He said \"no\" before the image even loaded.",
+  "Dad wants you to know he didn't raise you to have a moustache.",
+  "He showed this to the lads at work. They all agree with him.",
+  "Your dad has seen better moustaches on a cat. His words, not mine.",
+  "He said the moustache is grand. Just kidding. He said shave it.",
+  "Dad's moustache approval rating remains at a historic 0%.",
+  "He wants to know if you lost a bet.",
+  "Your father would like to remind you that razors exist and are affordable.",
+  "Dad said he'll talk to you again when you shave. He's not joking.",
+  "He's after showing your nan. She's on his side.",
+  "Your dad says this is worse than the last one, which he also hated.",
+  "He says if you spent as long on your career as you did on that moustache, you'd be sorted.",
+  "Dad has formally requested you stop using this app.",
+  "He says the moustache makes you look like you sell dodgy watches.",
+  "Your father says he's seen better lip coverage on a newborn.",
+  "Dad asked if the moustache came free with something.",
+  "He wants you to know that your clean-shaven photo is still his phone wallpaper. Hint taken.",
+  "Dad says every time you upload a new one it takes a year off his life.",
+  "He says at least it'll keep you warm in winter. That's not a compliment.",
+  "Your father has logged a formal complaint with this application.",
+  "Dad says: 'Tell him I said no. Again.'",
+  "He looked at it for 0.3 seconds. That's a new record for fastest rejection.",
+  "Dad says he'd rather look directly at the sun than at that moustache again.",
+  "Your father wants to know who's been encouraging you. He'd like a word.",
+  "He says the moustache has single-handedly lowered the property value.",
+  "Dad saw this and immediately texted your brother: 'At least one of you has sense.'",
+  "He says he's not angry. He's just going to bring it up at every family dinner for the next decade.",
+  "Your dad showed this to the dog. Even the dog looked away.",
+  "He says it looks like someone glued a caterpillar to your face. His exact words.",
+  "Dad wants you to know he Googled 'can you disown an adult child' after the last upload.",
+  "He asked if there's a refund policy on this moustache.",
+  "Your father has started a petition. It has one signature but it's very emphatic.",
+  "He says the moustache is the reason he tells people he has one fewer child than he actually does.",
+  "Dad says he wore a moustache once in 1987. He still hasn't forgiven himself.",
+  "He looked at it and just said 'Why?' eleven times in a row.",
+  "Your dad says Tom Selleck could pull it off. You are not Tom Selleck.",
+  "He says the neighbours asked if everything was alright at home after they saw it.",
+  "Dad wants me to tell you that your moustache has been banned from the family WhatsApp group.",
+  "He says he'd have more respect for the moustache if it had the decency to grow in properly.",
+  "Your father says this is the worst thing to happen to the family since the incident at the barbecue in '04.",
+  "He says he's seen more convincing moustaches drawn on with marker.",
+  "Dad wants to know if you're growing it ironically. Either way, no.",
+  "He says the moustache makes you look like a lad who'd charge for directions.",
+  "Your father has entered the chat just to leave the chat.",
+  "He says the only good moustache is the one you shave off.",
+  "Dad saw this and said 'I blame myself.' He doesn't, really. He blames you.",
+  "He says even Movember would reject this one.",
+  "Your dad wants you to know that he once liked a moustache. Then he woke up. It was a dream.",
+  "He showed the photo to his barber. The barber crossed himself.",
+  "Dad says your moustache has a moustache and they both need to go.",
+  "He says he wouldn't wish that moustache on his worst enemy. And he has enemies.",
+  "Your father says he's adding 'no moustaches' as a clause in his will.",
+];
+
+const tryAgainTexts = [
+  "He'll like this one, surely...",
+  "Maybe a different angle?",
+  "This time for SURE",
+  "One more try can't hurt",
+  "I refuse to give up",
+  "The definition of insanity is...",
+  "He HAS to like this one",
+  "Please, Dad. Please.",
+  "I'll grow it differently this time",
+  "What if I upload it upside down?",
+  "Just one more. Last one. Promise.",
+  "Fine. I'll try AGAIN.",
+  "I've grown it out more since last time",
+  "What about a handlebar? Dads love handlebars",
+  "Maybe if I smile more?",
+  "I'll try one with a filter",
+  "What if I also wear a hat",
+  "I've been using conditioner on it",
+  "Third time's the charm... right?",
+  "But what if I told him it's for charity",
+  "Let me just try a slightly different moustache",
+  "I bet he'll love a pencil moustache",
+  "THIS is the one. I can feel it.",
+  "Maybe he just needs to see it in person",
+  "What if I photoshop a moustache on HIM first",
+  "I've invested too much time to shave now",
+  "Perhaps if I frame it differently...",
+  "He literally has to say yes eventually",
+  "I'm not crying, you're crying",
+  "One does not simply give up on a moustache",
+  "Let me try with better lighting",
+  "Surely the 15th time is the charm",
+  "I read online that persistence is key",
+  "What if I upload someone else's moustache",
+  "Maybe he'll like it if I call it a 'lip beard'",
+  "I regret nothing. Upload again.",
+];
+
+function getTimestamp() {
+  const d = new Date();
+  return `[${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}]`;
+}
+
+function addLogLine(text, type) {
+  const line = document.createElement('div');
+  line.className = `log-line ${type}`;
+  line.innerHTML = `<span class="timestamp">${getTimestamp()}</span>${text}`;
+  logBox.appendChild(line);
+  logBox.scrollTop = logBox.scrollHeight;
+}
+
+function shuffleArray(arr) {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+uploadZone.addEventListener('click', () => {
+  if (!hasImage) fileInput.click();
+});
+
+uploadZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadZone.style.borderColor = '#f0d878';
+});
+
+uploadZone.addEventListener('dragleave', () => {
+  uploadZone.style.borderColor = '';
+});
+
+uploadZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadZone.style.borderColor = '';
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length) handleFile(fileInput.files[0]);
+});
+
+function handleFile(file) {
+  if (!file.type.startsWith('image/')) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    uploadZone.innerHTML = `<img src="${e.target.result}" class="preview-img" alt="Your moustache">`;
+    uploadZone.classList.add('has-image');
+    hasImage = true;
+    analyseBtn.disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+analyseBtn.addEventListener('click', runAnalysis);
+
+async function runAnalysis() {
+  attempts++;
+  analyseBtn.disabled = true;
+  resultBox.classList.remove('visible');
+  logBox.innerHTML = '';
+  logBox.classList.add('visible');
+  progressContainer.classList.add('visible');
+  progressBar.style.width = '0%';
+
+  const baseMsgs = shuffleArray(analysisMsgs);
+  const bonus = shuffleArray(extraMsgs).slice(0, 4 + Math.min(attempts, 6));
+  const allMsgs = [...baseMsgs.slice(0, 10), ...bonus, ...baseMsgs.slice(10)];
+
+  for (let i = 0; i < allMsgs.length; i++) {
+    const delay = 200 + Math.random() * 500;
+    await new Promise(r => setTimeout(r, delay));
+    addLogLine(allMsgs[i].text, allMsgs[i].type);
+    progressBar.style.width = `${Math.min(((i + 1) / allMsgs.length) * 100, 100)}%`;
+  }
+
+  await new Promise(r => setTimeout(r, 600));
+  progressBar.style.width = '100%';
+  await new Promise(r => setTimeout(r, 400));
+
+  gameWindow.classList.add('shake');
+  setTimeout(() => gameWindow.classList.remove('shake'), 500);
+
+  verdictText.textContent = pickRandom(verdicts);
+  messageText.textContent = pickRandom(messages);
+  resultBox.classList.add('visible');
+
+  tryAgainBtn.textContent = `\u21B4 ${pickRandom(tryAgainTexts)}`;
+
+  uploadCountEl.innerHTML = `Moustaches rejected: <span>${attempts}</span> | Dad's approval rate: <span>0%</span>`;
+
+  resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+tryAgainBtn.addEventListener('click', () => {
+  hasImage = false;
+  uploadZone.innerHTML = `
+    <span class="sword-icon">&#9876;</span>
+    <p>Drop thy moustache portrait here<br>or <span class="highlight">click to choose file</span></p>
+    <input type="file" id="fileInput" accept="image/*">
+  `;
+  uploadZone.classList.remove('has-image');
+
+  const newFileInput = document.getElementById('fileInput');
+  newFileInput.addEventListener('change', () => {
+    if (newFileInput.files.length) handleFile(newFileInput.files[0]);
+  });
+
+  analyseBtn.disabled = true;
+  logBox.classList.remove('visible');
+  progressContainer.classList.remove('visible');
+  resultBox.classList.remove('visible');
+  progressBar.style.width = '0%';
+});
+</script>
+</body>
+</html>
